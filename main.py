@@ -13,10 +13,12 @@ from __init__ import app, db, cors  # Definitions initialization
 from api.user import user_api # Blueprint import api definition
 from api.player import player_api
 from api.baking import baking_api
+from api.titanic import titanic_api
 # database migrations
 from model.users import initUsers
 from model.players import initPlayers
 from model.bakings import initBakings
+from model.titanic import initTitanic
 
 # setup App pages
 from projects.projects import app_projects # Blueprint directory import projects definition
@@ -28,7 +30,9 @@ db.init_app(app)
 app.register_blueprint(user_api) # register api routes
 app.register_blueprint(player_api)
 app.register_blueprint(baking_api)
+app.register_blueprint(titanic_api)
 app.register_blueprint(app_projects) # register app pages
+
 
 @app.errorhandler(404)  # catch for URL not found
 def page_not_found(e):
@@ -52,13 +56,14 @@ def before_request():
 
 # Create an AppGroup for custom commands
 custom_cli = AppGroup('custom', help='Custom commands')
-
+print("hi")
 # Define a command to generate data
 @custom_cli.command('generate_data')
 def generate_data():
     initUsers()
     initPlayers()
     initBakings()
+    initTitanic()
 
 # Register the custom command group with the Flask application
 app.cli.add_command(custom_cli)
@@ -66,6 +71,7 @@ app.cli.add_command(custom_cli)
 def activate_job():
     initUsers()
     initBakings()
+    initTitanic()
         
 # this runs the application on the development server
 if __name__ == "__main__":
